@@ -4,10 +4,13 @@ import pl.adamnowicki.orderapp.order.Order;
 import pl.adamnowicki.orderapp.order.OrderItem;
 
 public class OrderTotalPriceCalculator {
-  public double calculate(Order order) {
+  public double calculate(Order order) throws InvalidProductDefinitionException {
     double sum = 0.0;
     for (final OrderItem orderItem : order.orderItems) {
-      sum += orderItem.quantity * (orderItem.product.unitPrice);
+        if (orderItem.product.unitPrice == null) {
+          throw new InvalidProductDefinitionException(orderItem.product);
+        }
+        sum += orderItem.quantity * orderItem.product.unitPrice;
     }
     return sum;
   }
